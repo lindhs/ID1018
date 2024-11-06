@@ -1,0 +1,9 @@
+REMOVE SYNONYM ALGORITHM
+
+1. Determine index of the synonym line corresponding to the given word.
+   If the word is not present, throw an exception.
+2. Get synonyms in the synonym line in an array.
+3. Determine index of the synonym to be removed.
+   If the synonym is not present, throw an exception.
+4. Create a new synonym line at the index of the old one.
+   The new line consists of the word and all the synonyms, except the one to be removed.
