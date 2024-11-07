@@ -207,26 +207,44 @@ class SynonymHandler
     // the selection sort algorithm
     private static void sortIgnoreCase (String[] strings)
     {
-        
-        
-
+        for (int j = 0; j < strings.length; j++) {
+            for (int i = 0; i < strings.length -1 ; i++) {
+                if(strings[i].charAt(0) > strings[i+1].charAt(0)){
+                  String tempSyn = strings[i+1];
+                    strings[i+1] = strings[i];
+                 strings[i] =tempSyn;
+             }       
+         }
+        } 
     }
-	
 
     // sortSynonymLine accepts a synonym line, and sorts
     // the synonyms in this line
     private static String sortSynonymLine (String synonymLine)
     {
-        
+        String synonyms[] = synonymLine.substring(synonymLine.indexOf('|')+1).split(",");
+        for (int i = 0; i < synonyms.length; i++) {
+            synonyms[i] = synonyms[i].trim();
+        }
 
+        sortIgnoreCase(synonyms);
 
-        return "test";
+        String finishSynLine = synonymLine.substring(0, synonymLine.indexOf("| ")+2);
+        for (int i = 0; i < synonyms.length; i++) {
+            finishSynLine += synonyms[i] + ", ";
+        }
+        finishSynLine = finishSynLine.substring(0,finishSynLine.length()-2);
+        return finishSynLine;
     }
 
     // sortSynonymData accepts synonym data, and sorts its
     // synonym lines and the synonyms in these lines
 	public static void sortSynonymData (String[] synonymData)
 	{
-        // add code here
-	}
+        for (int i = 0; i < synonymData.length; i++) {
+            synonymData[i] = sortSynonymLine(synonymData[i]);
+        }
+    
+        sortIgnoreCase(synonymData);
+    	}
 }
