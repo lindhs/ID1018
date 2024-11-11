@@ -145,11 +145,11 @@ class SynonymHandler
     // getSynonyms returns synonyms in a given synonym line.
 	private static String[] getSynonyms (String synonymLine)
 	{
-        synonymLine = synonymLine.substring(synonymLine.indexOf('|'));
+        synonymLine = synonymLine.substring(synonymLine.indexOf('|')+2);
         String synonymData2[] = synonymLine.split(", ");
 
         for (int i = 0; i < synonymData2.length; i++) {
-            System.err.println(synonymData2[i]);
+            synonymData2[i] = synonymData2[i].trim();
         }
 
 
@@ -176,31 +176,26 @@ class SynonymHandler
 	    String word, String synonym)
 	    throws IllegalArgumentException, IllegalStateException
 	{
-        String newSynonymLine = "";
-
-        int lineIndex = synonymLineIndex(synonymData, word);
-        if (lineIndex < 0) {
-            throw new IllegalArgumentException("Word not found in synonym data: " + word);
+        if(synonymLineIndex(synonymData, word) == -1) {
+            throw new IllegalStateException("word not present");
         }
-    
-        String oldSynonymLine = synonymData[lineIndex];
-    
-        int x = oldSynonymLine.indexOf(synonym);
-        int x2 = x;
-        if (x == -1) {
-            throw new IllegalStateException("Word not found in the synonym line: " + word);
+        String synonymData2[] = getSynonyms(synonymData[synonymLineIndex(synonymData, word)]);
+        String returnData[] = new String[synonymData2.length -1];
+
+        if(synonymData2.length <= 1){
+            throw new IllegalArgumentException("Word only has one synonym");
         }
 
-        if(oldSynonymLine.charAt(x -2) == ','){
-            x-=2;
-        }
-        if(oldSynonymLine.charAt(x + synonym.length()) == ','){
-            x2+=2;
-        }
-    
-        newSynonymLine = oldSynonymLine.substring(0, x) + oldSynonymLine.substring(x2 + word.length());
-    
-        synonymData[lineIndex] = newSynonymLine;
+        int synCounter = 0;
+        for (int i = 0; i < synonymData2.length; i++) {
+            if(!synonymData2[i].equals(synonym)){
+                returnData[synCounter] = synonymData2[i];
+                synCounter++;
+            }
+        }        
+        
+        synonymData[synonymLineIndex(synonymData, word)] = word + " | " + String.join(", ",returnData);
+
     }
 
     // sortIgnoreCase sorts an array of strings, using
