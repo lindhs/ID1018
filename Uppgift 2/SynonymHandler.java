@@ -18,9 +18,9 @@ written to a given file.
 Author: Fadil Galjic
 
 ****************************************************************/
-
-import java.io.*;    // FileReader, BufferedReader, PrintWriter,
+import java.io.*;    // FileReader, BufferedReader, PrintWriter,z
                      // IOException
+
 
 class SynonymHandler
 {
@@ -96,9 +96,10 @@ class SynonymHandler
     public static String getSynonymLine (String[] synonymData,
         String word) throws IllegalArgumentException
     {
-		int index = synonymLineIndex(synonymData, word);
-
-	    return synonymData[index];
+        if (synonymLineIndex(synonymData, word) == -1){
+            throw new IllegalArgumentException("word not present");
+        }
+	    return synonymData[synonymLineIndex(synonymData, word)];
 	}
 
     // addSynonymLine accepts synonym data, and adds a given
@@ -121,8 +122,8 @@ class SynonymHandler
 	public static String[] removeSynonymLine (String[] synonymData,
 	    String word) throws IllegalArgumentException
 	{
+        if(synonymLineIndex(synonymData, word) == -1){throw new IllegalArgumentException("word not found");}
         String synonymData2[] = new String[synonymData.length-1];
-        try {
             int foundString = 0;
             for (int i = 0; i < synonymData2.length; i++) {
                 if(synonymData[i] == getSynonymLine(synonymData, word)){
@@ -136,24 +137,15 @@ class SynonymHandler
                     j++;
                 }
             }
-        } catch (Exception e) {
-            System.err.println("word not found");
-        }
+
         return synonymData2;
 	}
 
     // getSynonyms returns synonyms in a given synonym line.
 	private static String[] getSynonyms (String synonymLine)
 	{
-        synonymLine = synonymLine.substring(synonymLine.indexOf('|')+2);
-        String synonymData2[] = synonymLine.split(", ");
+        return synonymLine.substring(synonymLine.indexOf('|')+2).split(", ");
 
-        for (int i = 0; i < synonymData2.length; i++) {
-            synonymData2[i] = synonymData2[i].trim();
-        }
-
-
-        return synonymData2;
 	}
 
     // addSynonym accepts synonym data, and adds a given
@@ -163,6 +155,7 @@ class SynonymHandler
 	public static void addSynonym (String[] synonymData,
 	    String word, String synonym) throws IllegalArgumentException
 	{
+        if(synonymLineIndex(synonymData, word) == -1){throw new IllegalArgumentException("word not found");}
         synonymData[synonymLineIndex(synonymData, word)] = getSynonymLine(synonymData, word) + ", " +synonym;
     }
 
@@ -177,13 +170,13 @@ class SynonymHandler
 	    throws IllegalArgumentException, IllegalStateException
 	{
         if(synonymLineIndex(synonymData, word) == -1) {
-            throw new IllegalStateException("word not present");
+            throw new IllegalArgumentException("word not present");
         }
         String synonymData2[] = getSynonyms(synonymData[synonymLineIndex(synonymData, word)]);
         String returnData[] = new String[synonymData2.length -1];
 
         if(synonymData2.length <= 1){
-            throw new IllegalArgumentException("Word only has one synonym");
+            throw new IllegalStateException("Word only has one synonym");
         }
 
         int synCounter = 0;
@@ -217,19 +210,10 @@ class SynonymHandler
     // the synonyms in this line
     private static String sortSynonymLine (String synonymLine)
     {
-        String synonyms[] = synonymLine.substring(synonymLine.indexOf('|')+1).split(",");
-        for (int i = 0; i < synonyms.length; i++) {
-            synonyms[i] = synonyms[i].trim();
-        }
-
+        String synonyms[] = getSynonyms(synonymLine);
         sortIgnoreCase(synonyms);
 
-        String finishSynLine = synonymLine.substring(0, synonymLine.indexOf("| ")+2);
-        for (int i = 0; i < synonyms.length; i++) {
-            finishSynLine += synonyms[i] + ", ";
-        }
-        finishSynLine = finishSynLine.substring(0,finishSynLine.length()-2);
-        return finishSynLine;
+        return synonymLine.substring(0, synonymLine.indexOf("| ")+2) + String.join(", ", synonyms);
     }
 
     // sortSynonymData accepts synonym data, and sorts its
