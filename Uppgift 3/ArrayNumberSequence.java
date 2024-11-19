@@ -71,6 +71,9 @@ public class ArrayNumberSequence implements NumberSequence
 
 	@Override
 	public double numberAt(int position) throws IndexOutOfBoundsException {
+		if(numbers[position] == -1){
+			throw new IndexOutOfBoundsException("position not found");
+		}
 		return numbers[position];
 	}
 
@@ -131,6 +134,9 @@ public class ArrayNumberSequence implements NumberSequence
 
 	@Override
 	public void insert(int position, double number) throws IndexOutOfBoundsException {
+		if(position < numbers.length-1 || position > numbers.length-1){
+			throw new IndexOutOfBoundsException("position out of bounds");
+		}
 		double newNumbers[] = new double[numbers.length+1];
 		for (int i = 0; i < newNumbers.length; i++) {
 			if (i < position) { //below
@@ -148,6 +154,14 @@ public class ArrayNumberSequence implements NumberSequence
 
 	@Override
 	public void removeAt(int position) throws IndexOutOfBoundsException, IllegalStateException {
+		if(position < 1 || position > numbers.length-1){
+			throw new IndexOutOfBoundsException("position out of bounds");
+		}
+
+		if(numbers.length == 2){
+			throw new IllegalStateException("only two numbers left. cant remove");
+		}
+		
 		int counter = 0;
 		double[] newNumbers = new double[numbers.length -1];
 	
@@ -164,9 +178,6 @@ public class ArrayNumberSequence implements NumberSequence
 
 	@Override
 	public double[] asArray() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'asArray'");
+		return numbers;
 	}
-
-    // add code here
 }
