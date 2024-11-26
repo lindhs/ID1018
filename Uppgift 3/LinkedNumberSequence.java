@@ -11,7 +11,7 @@ Fadil Galjic
 
 ****************************************************************/
 
-public class LinkedNumberSequence //implements NumberSequence
+public class LinkedNumberSequence implements NumberSequence
 {
 	private class Node
 	{
@@ -57,6 +57,78 @@ public class LinkedNumberSequence //implements NumberSequence
 		s = s + n.number;
 
 		return s;
+	}
+
+	@Override
+	public int length() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'length'");
+	}
+
+	@Override
+	public double upperBound() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'upperBound'");
+	}
+
+	@Override
+	public double lowerBound() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'lowerBound'");
+	}
+
+	@Override
+	public double numberAt(int position) throws IndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'numberAt'");
+	}
+
+	@Override
+	public int positionOf(double number) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'positionOf'");
+	}
+
+	@Override
+	public boolean isIncreasing() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'isIncreasing'");
+	}
+
+	@Override
+	public boolean isDecreasing() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'isDecreasing'");
+	}
+
+	@Override
+	public boolean contains(double number) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'contains'");
+	}
+
+	@Override
+	public void add(double number) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'add'");
+	}
+
+	@Override
+	public void insert(int position, double number) throws IndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'insert'");
+	}
+
+	@Override
+	public void removeAt(int position) throws IndexOutOfBoundsException, IllegalStateException {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'removeAt'");
+	}
+
+	@Override
+	public double[] asArray() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'asArray'");
 	}
 
     // add code here

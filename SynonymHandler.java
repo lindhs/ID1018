@@ -82,9 +82,11 @@ class SynonymHandler
 				i++;
 	    }
 
-	    if (!wordFound)
+	    if (!wordFound){
+            System.err.println("word not present");
 	        throw new IllegalArgumentException(
 		        word + " not present");
+            }
 
 	    return i;
 	}
@@ -122,11 +124,13 @@ class SynonymHandler
 	public static String[] removeSynonymLine (String[] synonymData,
 	    String word) throws IllegalArgumentException
 	{
-        if(synonymLineIndex(synonymData, word) == -1){throw new IllegalArgumentException("word not found");}
-        String synonymData2[] = new String[synonymData.length-1];
+        try{
+            synonymLineIndex(synonymData, word);
+
+            String synonymData2[] = new String[synonymData.length-1];
             int foundString = 0;
             for (int i = 0; i < synonymData2.length; i++) {
-                if(synonymData[i] == getSynonymLine(synonymData, word)){
+                if(synonymData[i].equals(getSynonymLine(synonymData, word))){
                     foundString=i;
                 }
             }
@@ -138,7 +142,11 @@ class SynonymHandler
                 }
             }
 
-        return synonymData2;
+            return synonymData2;
+        } catch (IllegalArgumentException exception){
+            throw new IllegalArgumentException("Word not present");
+        }
+        
 	}
 
     // getSynonyms returns synonyms in a given synonym line.
@@ -155,8 +163,11 @@ class SynonymHandler
 	public static void addSynonym (String[] synonymData,
 	    String word, String synonym) throws IllegalArgumentException
 	{
-        if(synonymLineIndex(synonymData, word) == -1){throw new IllegalArgumentException("word not found");}
+        try {
         synonymData[synonymLineIndex(synonymData, word)] = getSynonymLine(synonymData, word) + ", " +synonym;
+        } catch (IllegalArgumentException exception){
+            throw new IllegalArgumentException("word not present");
+        }
     }
 
     // removeSynonym accepts synonym data, and removes a given
@@ -169,9 +180,6 @@ class SynonymHandler
 	    String word, String synonym)
 	    throws IllegalArgumentException, IllegalStateException
 	{
-        if(synonymLineIndex(synonymData, word) == -1) {
-            throw new IllegalArgumentException("word not present");
-        }
         String synonymData2[] = getSynonyms(synonymData[synonymLineIndex(synonymData, word)]);
         String returnData[] = new String[synonymData2.length -1];
 
@@ -180,32 +188,45 @@ class SynonymHandler
         }
 
         int synCounter = 0;
+        boolean wordFound = false;
         for (int i = 0; i < synonymData2.length; i++) {
             if(!synonymData2[i].equals(synonym)){
                 returnData[synCounter] = synonymData2[i];
                 synCounter++;
             }
+            else{
+                wordFound = true;
+            }
         }        
+
+        if(!wordFound){
+            throw new IllegalArgumentException("Word not present");
+        }
         
         synonymData[synonymLineIndex(synonymData, word)] = word + " | " + String.join(", ",returnData);
 
+        
     }
 
     // sortIgnoreCase sorts an array of strings, using
     // the selection sort algorithm
-    private static void sortIgnoreCase (String[] strings)
-    {
-        for (int j = 0; j < strings.length; j++) {
-            for (int i = 0; i < strings.length -1 ; i++) {
-                if(strings[i].charAt(0) > strings[i+1].charAt(0)){
-                  String tempSyn = strings[i+1];
-                    strings[i+1] = strings[i];
-                 strings[i] =tempSyn;
-             }       
-         }
-        } 
-    }
+    public static void sortIgnoreCase(String[] strings) {
 
+        //compare the first index to all other index. find the smallest one. and replace them
+        //now compare the next index in a similar way etc... for array.length.
+        for (int i = 0; i < strings.length; i++) {
+            int minIndex = i;
+            for (int j = minIndex; j < strings.length; j++) {
+                if(strings[j].compareToIgnoreCase(strings[minIndex])<0){
+                    minIndex = j;
+                }
+            }
+            //switch the newly found min, with the comparing string.
+            String tempCurrent = strings[minIndex]; 
+            strings[minIndex] = strings[i];
+            strings[i] = tempCurrent;
+        }
+    }
     // sortSynonymLine accepts a synonym line, and sorts
     // the synonyms in this line
     private static String sortSynonymLine (String synonymLine)

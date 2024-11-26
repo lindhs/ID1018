@@ -83,7 +83,7 @@ class Temperatures1
 		for (int week = 1; week <= nofWeeks; week++) {
 			minT[week]=t[week][1];
 			maxT[week]=t[week][1];
-			for (int i = 1; i <= t.length; i++) {
+			for (int i = 1; i < nofMeasurementsPerWeek; i++) {
 				if(minT[week] > t[week][i+1]){
 					minT[week] = t[week][i+1]; // get minimum for week.
 				}
@@ -92,7 +92,7 @@ class Temperatures1
 				}
 			}
 			
-			for(int j =1; j<= t.length+1; j++){
+			for(int j =1; j<= nofMeasurementsPerWeek; j++){
 				sumT[week] += t[week][j];
 			}
 
@@ -122,12 +122,9 @@ class Temperatures1
 		double sumTemp = sumT[1];
 		double avgTemp = 0;
 
-		sumTemp = 0;
-     	maxTemp = Integer.MIN_VALUE;  
-        minTemp = Integer.MAX_VALUE;  
 		
 		
-
+		sumTemp=0;
         for (int i = 1; i < t.length; i++) {
             for (int j = 1; j < t[i].length; j++) {
                 if (t[i][j] > maxTemp) {
